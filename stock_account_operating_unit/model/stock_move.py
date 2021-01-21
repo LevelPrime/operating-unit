@@ -122,3 +122,10 @@ class StockMove(models.Model):
                     )
                     am.post()
             return res
+
+    def _stock_account_prepare_anglo_saxon_out_lines_vals(self):
+        vals = super(StockMove, self)._stock_account_prepare_anglo_saxon_out_lines_vals()
+        AccountMove = self.env['account.move']
+        for val in vals:
+            val['operating_unit_id'] = AccountMove.browse([val['move_id']]).operating_unit_id.id
+        return vals
